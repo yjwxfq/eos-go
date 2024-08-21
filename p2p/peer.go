@@ -13,7 +13,6 @@ import (
 
 	"github.com/eoscanada/eos-go"
 	"github.com/eoscanada/eos-go/ecc"
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -213,7 +212,7 @@ func (p *Peer) SendSyncRequest(startBlockNum uint32, endBlockNumber uint32) (err
 		EndBlock:   endBlockNumber,
 	}
 
-	return errors.WithStack(p.WriteP2PMessage(syncRequest))
+	return p.WriteP2PMessage(syncRequest)
 }
 func (p *Peer) SendRequest(startBlockNum uint32, endBlockNumber uint32) (err error) {
 	zlog.Debug("SendRequest",
@@ -232,7 +231,7 @@ func (p *Peer) SendRequest(startBlockNum uint32, endBlockNumber uint32) (err err
 		},
 	}
 
-	return errors.WithStack(p.WriteP2PMessage(request))
+	return p.WriteP2PMessage(request)
 }
 
 func (p *Peer) SendNotice(headBlockNum uint32, libNum uint32, mode byte) error {
@@ -253,14 +252,14 @@ func (p *Peer) SendNotice(headBlockNum uint32, libNum uint32, mode byte) error {
 		},
 	}
 
-	return errors.WithStack(p.WriteP2PMessage(notice))
+	return p.WriteP2PMessage(notice)
 }
 
 func (p *Peer) SendTime() error {
 	zlog.Debug("SendTime", zap.String("peer", p.Address))
 
 	notice := &eos.TimeMessage{}
-	return errors.WithStack(p.WriteP2PMessage(notice))
+	return p.WriteP2PMessage(notice)
 }
 
 func (p *Peer) SendHandshake(info *HandshakeInfo) error {
